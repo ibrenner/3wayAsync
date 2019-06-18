@@ -44,3 +44,6 @@ optional arguments:
 ```
  ./3WayAsync.py -v vol3way  -b vol3way-target -c .testing2.sec -r 30 -i 1
   ```
+
+### note
+InfiniBox systems running version lower than 5.x won't be able to replicate filesystems. 
