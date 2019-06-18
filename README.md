@@ -46,4 +46,4 @@ optional arguments:
   ```
 
 ### note
-InfiniBox systems running version lower than 5.x won't be able to replicate filesystems. 
+InfiniBox systems running version lower than 5.x won't be able to replicate filesystems using this tool.
