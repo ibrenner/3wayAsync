@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 from infinisdk import InfiniBox
+import arrow
 from datetime import timedelta
 import argparse
 import base64
@@ -30,7 +31,17 @@ def get_objects(v1_name,remote_ibox, remote_vol, rpo, interval):
     replica = src.replicas.replicate_entity_use_base( replication_type='ASYNC',entity=v1,member_mappings=None,link=link,local_snapshot=snaplist[-1][0],remote_snapshot=snaplist[-1][1])
     replica.update_rpo(timedelta(minutes=int(rpo)))
     replica.update_sync_interval(timedelta(minutes=int(interval)))
+    now=arrow.utcnow()
+    cutoff=now.shift(days=-1)
+    del_snaps(v1snaps, cutoff)
+    del_snaps(v2snaps, cutoff)      
     return replica
+
+def del_snaps(snaplist, cutoff):
+    for snap in snaplist:
+        if snap.get_created_at() < cutoff:
+            print(snap.get_name())
+            snap.delete()
 
 
 def get_args():
