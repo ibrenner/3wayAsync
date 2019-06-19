@@ -22,12 +22,15 @@ def get_objects(v1_name,remote_ibox, remote_vol, rpo, interval):
     v1snaps = v1.get_children()
     v2 = dst.datasets.get(name=remote_vol)
     v2snaps = v2.get_children()
-    if rep1.get_job_state() == 'DONE':
-        rep1.delete(retain_staging_area=True)
     for snap in v1snaps:
         for dsnap in v2snaps:
             if snap.get_rmr_snapshot_guid() == dsnap.get_rmr_snapshot_guid():
                 snaplist.append([snap,dsnap])
+    if rep1.get_job_state() == 'DONE':
+        rep1.delete(retain_staging_area=True)
+    else:
+        print("Replica Not Yet Ready")
+        exit(1)
     replica = src.replicas.replicate_entity_use_base( replication_type='ASYNC',entity=v1,member_mappings=None,link=link,local_snapshot=snaplist[-1][0],remote_snapshot=snaplist[-1][1])
     replica.update_rpo(timedelta(minutes=int(rpo)))
     replica.update_sync_interval(timedelta(minutes=int(interval)))
